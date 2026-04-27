@@ -26,6 +26,12 @@ public class Prompt : MonoBehaviour
         SetApproval(promptData.IndicatorType);
     }
 
+    public int GetSeverity()
+    {
+        if (_promptData == null) return 0;
+        return _promptData.Severity;
+    }
+
     private void SetPrompt(string promptText)
     {
         _promptText.text = promptText;

@@ -6,4 +6,5 @@ public class PromptData : ScriptableObject
     public string PromptHeader;
     public IndicatorTypes IndicatorType;
     public bool Expandable;
+    [Range(0, 3)] public int Severity;
 }
