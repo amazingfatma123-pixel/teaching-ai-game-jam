@@ -28,7 +28,7 @@ public class ScoreUI : MonoBehaviour
     {
         //These if checks aren't needed anymore.
 
-        /*if (other.transform.tag == "Enemy")
+        if (other.transform.tag == "Enemy")
         {
             companyValue -= 10;
             valueText.text = "Company Value = " + companyValue.ToString("F2");
@@ -50,19 +50,20 @@ public class ScoreUI : MonoBehaviour
 
             Destroy(other.gameObject);
             Debug.Log(companyValue.ToString("F2"));
-        }*/ 
+        }
 
-       
+      
         }
 
 
    
     void UpdateUI()
     {
-        if (valueText != null) { 
+        if (valueText != null) 
+        { 
         valueText.text = "Company Value = " + companyValue.ToString("F2");
 
-    }
+        }
 
 
     }

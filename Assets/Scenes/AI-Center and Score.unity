@@ -1020,9 +1020,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1523021552}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e6ebf9910844894cb005909cacc68bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 8056e5d8eec326847bf6754c13c2a293, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ScoreUI
+  m_EditorClassIdentifier: Assembly-CSharp::AiCenter
   companyValue: 0
   valueText: {fileID: 273451289}
   positiveValueSound: {fileID: 0}
