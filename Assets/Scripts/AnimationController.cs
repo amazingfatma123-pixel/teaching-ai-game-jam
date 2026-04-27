@@ -7,8 +7,6 @@ using UnityEngine.AI;
 [RequireComponent(typeof(Animator))]
 public class AnimationController : MonoBehaviour
 {
-    private CancellationTokenSource _animationCancellationTokenSource = null;
-
     private Animator _animator;
 
     private AnimationClip _currentClip;
@@ -23,13 +21,6 @@ public class AnimationController : MonoBehaviour
         if (_currentClip != null && _currentClip == clip)
             return;
 
-        if (_animationCancellationTokenSource != null)
-        {
-            _animationCancellationTokenSource.Cancel();
-            _animationCancellationTokenSource.Dispose();
-            _animationCancellationTokenSource = null;
-        }
-
         _animator.speed = playbackSpeed / 60f;
         
         if (startTime > 0f)
@@ -40,46 +31,10 @@ public class AnimationController : MonoBehaviour
         _currentClip = clip;
     }
 
-    public async Task PlayAnimationClipAsync(AnimationClip clip, float playbackSpeed = 60f, float startTime = 0f)
+    public void PlayAnimationClip(out float time, AnimationClip clip, float playbackSpeed = 60f, float startTime = 0f)
     {
-        if (_currentClip != null && _currentClip == clip)
-            return;
-
-        if (_animationCancellationTokenSource != null)
-        {
-            _animationCancellationTokenSource.Cancel();
-            _animationCancellationTokenSource.Dispose();
-            _animationCancellationTokenSource = null;
-        }
-
-        _animationCancellationTokenSource = new CancellationTokenSource();
-        CancellationToken token = _animationCancellationTokenSource.Token;
-
-        _animator.speed = playbackSpeed / 60f;
-        
-        if (startTime > 0f)
-            _animator.Play(clip.name, 0, startTime / clip.length);
-        else
-            _animator.Play(clip.name);
-
-        _currentClip = clip;
-
-        try 
-        {
-            float clipDuration = clip.length / _animator.speed;
-            await Task.Delay((int)(clipDuration * 1000), token);
-        }
-        catch (OperationCanceledException)
-        {
-            // Animation was interrupted, just exit
-        }
-        finally
-        {
-            _animationCancellationTokenSource.Dispose();
-            _animationCancellationTokenSource = null;
-        }
-
-        _currentClip = null;
+        PlayAnimationClip(clip, playbackSpeed, startTime);
+        time = clip.length / _animator.speed;
     }
 
     public AnimationClip GetClip(string name)

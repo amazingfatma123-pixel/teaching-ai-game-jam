@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using TMPro;
@@ -18,7 +19,8 @@ public class Prompt : MonoBehaviour
     [SerializeField] private AnimationClip _expandAnimation;
     [SerializeField] private AnimationClip _shrinkAnimation;
 
-    private CancellationTokenSource _writingCancellationTokenSource = null;
+    private CancellationTokenSource _expandCancellationTokenSource = null;
+    private CancellationTokenSource _shrinkCancellationTokenSource = null;
 
     private void Awake()
     {
@@ -61,21 +63,53 @@ public class Prompt : MonoBehaviour
 
     private async void Expand()
     {
-        await _animationController.PlayAnimationClipAsync(_expandAnimation);
-        PromptData.PromptCheck check = _promptData.GetCurrentCheck();
-        await _checkText.WriteText(check.CheckText, 0.005f);
+        _animationController.PlayAnimationClip(out float time, _expandAnimation);
+
+        _shrinkCancellationTokenSource?.Cancel();
+        _expandCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken token = _expandCancellationTokenSource.Token;
+
+        try {
+            await Task.Delay(Mathf.RoundToInt(time * 1000), token);
+            PromptData.PromptCheck check = _promptData.GetCurrentCheck();
+            await _checkText.WriteText(check.CheckText, 0.005f, token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Operation was cancelled. No action needed.
+        }
+        finally
+        {
+            _expandCancellationTokenSource.Dispose();
+            _expandCancellationTokenSource = null;
+        }
     }
 
     private async void Shrink()
     {
-        await _checkText.ClearText(0.0025f);
-        await _animationController.PlayAnimationClipAsync(_shrinkAnimation);
+        _expandCancellationTokenSource?.Cancel();
+        _shrinkCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken token = _shrinkCancellationTokenSource.Token;
+
+        try
+        {
+            await _checkText.ClearText(0.0025f, token);
+            _animationController.PlayAnimationClip(out float time, _shrinkAnimation);
+            await Task.Delay(Mathf.RoundToInt(time * 1000), token);
+        }
+        catch (OperationCanceledException)
+        {
+            // Operation was cancelled. No action needed.
+        }
+        finally
+        {
+            _shrinkCancellationTokenSource.Dispose();
+            _shrinkCancellationTokenSource = null;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Collision detected with " + collision.name);
-
         if (collision.CompareTag("Player") && _promptData.Expandable)
         {
             Expand();
