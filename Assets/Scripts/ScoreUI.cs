@@ -52,29 +52,8 @@ public class ScoreUI : MonoBehaviour
             Debug.Log(companyValue.ToString("F2"));
         }*/ 
 
-        if (other.TryGetComponent(out Prompt prompt))
-        {
-            int severity = prompt.GetSeverity();
-
-            float severityScore = CalculateSeverityScore(severity);
-
-            //Instead of this, create an UpdateScore(float change) method in this script and call that from the AI-center script, passing in the score change.
-            companyValue += severityScore;
-            UpdateUI();
-
-            Debug.Log("Severity: " + severity + ", Score: " + severityScore + ", Company Value: " + companyValue.ToString("F2"));
+       
         }
-
-
-    }
-
-    //Also move this to the AI-center script.
-    private float CalculateSeverityScore(int severity) 
-    {
-        severity = Math.Clamp(severity, 0, 3);
-
-        return (-12.5f * severity) + 7.5f;    
-    }
 
 
    
