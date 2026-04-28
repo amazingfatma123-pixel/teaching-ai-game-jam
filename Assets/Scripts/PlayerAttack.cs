@@ -19,7 +19,7 @@ public class PlayerAttack : MonoBehaviour
         _lastAttacked += Time.deltaTime;
     }
 
-    private async void Attack()
+    private void Attack()
     {
         if (_lastAttacked < _cooldownTime) return;
 
