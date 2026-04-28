@@ -6,16 +6,25 @@ public class EnemyMoveToAI : MonoBehaviour
     [SerializeField] private GameObject aiCore;
     [SerializeField] private float speed = 1.5f;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
     void Update()
     {
-        transform.position = Vector2.MoveTowards(transform.position, aiCore.transform.position, speed * Time.deltaTime);
-        
+        if (aiCore == null)
+            return;
+
+        // Direction toward AI
+        Vector2 direction = (aiCore.transform.position - transform.position).normalized;
+
+        // Sideways direction (perpendicular)
+        Vector2 sideDirection = new Vector2(-direction.y, direction.x);
+
+        // Wobble movement
+        float wobble = Mathf.Sin(Time.time * 3f) * 0.5f;
+
+        // Combine forward + sideways
+        Vector2 finalDirection = direction + sideDirection * wobble;
+
+        transform.position += (Vector3)(finalDirection.normalized * speed * Time.deltaTime);
+
     }
 }
