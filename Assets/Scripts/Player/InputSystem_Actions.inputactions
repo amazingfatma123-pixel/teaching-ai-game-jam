@@ -23,13 +23,31 @@
                     "processors": "",
                     "interactions": "MultiTap",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "tap",
+                    "type": "Button",
+                    "id": "df9db2e0-b383-4e58-b2fc-f9917730db51",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "tapPosition",
+                    "type": "Value",
+                    "id": "09e1b26d-6e5b-4e19-bc79-4e4a5424570b",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
                     "id": "36602373-e04b-48e0-a31c-86b96fa2aa1c",
-                    "path": "<Touchscreen>/position",
+                    "path": "<Touchscreen>/Press",
                     "interactions": "",
                     "processors": "",
                     "groups": ";Touch",
@@ -45,6 +63,28 @@
                     "processors": "",
                     "groups": ";Touch",
                     "action": "press",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "67ee2954-4819-4ca0-86b4-2aea0d58c630",
+                    "path": "<Touchscreen>/Press",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Touch",
+                    "action": "tap",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6c9a2dad-a0d5-4fe2-8fba-d4edbed485da",
+                    "path": "<Touchscreen>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Touch",
+                    "action": "tapPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

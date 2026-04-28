@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
@@ -9,43 +10,84 @@ using UnityEngine.InputSystem.LowLevel;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField]private float MaxSpeed = 1; // in m/s
+    [SerializeField]private float ImpulseMultiplier = 0.5f; // in m/s
+
     [SerializeField]private float clampLength = 5; // in meters
+
+    public event Action AttackEvent;
+    public event Action<Vector2> MoveEvent;
 
     private Rigidbody2D playerRigidbody;
     private PlayerInput playerInput;
     private InputAction pressAction;
     private InputAction doubleTapAction;
+    private InputAction tapAction;
+    private InputAction tapPositionAction;
+
+    Coroutine moveRoutine;
+    
 
     private void Awake(){
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerInput = GetComponent<PlayerInput>();
-        pressAction = playerInput.actions["press"];
+        //pressAction = playerInput.actions["press"];
         doubleTapAction = playerInput.actions["doubleTap"];
+        tapAction = playerInput.actions["tap"];
+        tapPositionAction = playerInput.actions["tapPosition"];
     }
     private void OnEnable(){
-        pressAction.performed += Move;
+        //pressAction.performed += Move;
+
         doubleTapAction.performed += Attack;
+        tapAction.started += StartMove;
+        tapAction.canceled += EndMove;
     }
     private void OnDisable(){
-        pressAction.performed -= Move;
+        //pressAction.performed -= Move;
+
         doubleTapAction.performed -= Attack;
+        tapAction.started -= StartMove;
+        tapAction.canceled -= EndMove;
     }
 
-    private void Move(InputAction.CallbackContext context)
+    private void StartMove(InputAction.CallbackContext context)
     {
-        var touch = context.ReadValue<TouchState>();
-        //Debug.Log("move");
-        Vector2 trackedPosition = Camera.main.ScreenToWorldPoint( touch.position ); // in world space
-        playerRigidbody.AddForce(_getForce(trackedPosition));
+        //Debug.Log("tap");
+        moveRoutine = StartCoroutine("Move");
+        //MoveEvent(_getForce(_getTrackedPosition()).normalized);
+    }
+    IEnumerator Move()
+    {
+        //Debug.Log("Start Move");
+        while (tapAction.IsInProgress())
+        {
+            playerRigidbody.AddForce(_getForce(_getTrackedPosition()));
+            yield return new WaitForFixedUpdate();
+        }
+        //Debug.Log("End Move");
+    }
+
+    private void EndMove(InputAction.CallbackContext context)
+    {
+        StopCoroutine(moveRoutine);
+        //Debug.Log("canceled Move");
+        //MoveEvent(Vector2.zero);
     }
     
     void Attack(InputAction.CallbackContext context)
     {  
-        var touch = context.ReadValue<TouchState>();
+        //AttackEvent();
         Debug.Log("Attack");
-        Vector2 trackedPosition = Camera.main.ScreenToWorldPoint( touch.position ); // in world space
-        playerRigidbody.AddForce(_getForce(trackedPosition), ForceMode2D.Impulse);
+        playerRigidbody.AddForce(ImpulseMultiplier*_getForce(_getTrackedPosition()), ForceMode2D.Impulse);
     }
+    
+    Vector2 _getTrackedPosition()
+    {
+        Vector2 screenPosition = tapPositionAction.ReadValue<Vector2>();
+        Vector2 trackedPosition = Camera.main.ScreenToWorldPoint( screenPosition ); // in world space
+        return trackedPosition;
+    }
+    
     Vector2 _getForce(Vector2 trackedPosition)
     {
         Vector2 currentPosition = new Vector2(this.transform.position.x,this.transform.position.y);
@@ -54,21 +96,4 @@ public class PlayerController : MonoBehaviour
         float forceMagnitude = MaxSpeed * Math.Clamp(value:difference.magnitude, min:0, max:clampLength) / clampLength;
         return forceMagnitude*direction;
     }
-    /*
-    private void CheckTap(TouchState touch)
-    {
-        if (!touch.isTap)
-            return;
-
-        if (_lastTapTime > 0f)
-        {
-            _tapCount++;
-        } else {
-            _tapCount = 1;
-        }
-
-        //Debug.Log($"Tap detected. Tap count: {_tapCount}");
-        _lastTapTime = TAP_THRESHOLD;
-    }*/
-
 }
