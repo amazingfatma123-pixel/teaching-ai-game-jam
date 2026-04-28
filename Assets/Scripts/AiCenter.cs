@@ -13,18 +13,27 @@ public class AiCenter : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (!other.CompareTag("Enemy")) return;
 
+        int childCount = other.transform.childCount;
 
-        if (other.TryGetComponent(out Prompt prompt))
+        for (int i = 0; i < childCount; i++)
         {
-            int severity = prompt.GetSeverity();
+            Transform child = other.transform.GetChild(i);
 
-            float severityScore = CalculateSeverityScore(severity);
+            if (child.TryGetComponent(out Prompt prompt))
+            {
+                int severity = prompt.GetSeverity();
 
-            Debug.Log("Severity: " + severity + ", Score: " + severityScore.ToString("F2"));
+                float severityScore = CalculateSeverityScore(severity);
 
-            ScoreUI.Instance.UpdateScore(severityScore);
+                Debug.Log("Severity: " + severity + ", Score: " + severityScore.ToString("F2"));
+
+                ScoreUI.Instance.UpdateScore(severityScore);
+            }
         }
+
+        Destroy(other.gameObject);
     }
     private float CalculateSeverityScore(int severity)
     {
