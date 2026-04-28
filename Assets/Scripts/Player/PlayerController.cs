@@ -19,7 +19,6 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody2D playerRigidbody;
     private PlayerInput playerInput;
-    private InputAction pressAction;
     private InputAction doubleTapAction;
     private InputAction tapAction;
     private InputAction tapPositionAction;
@@ -30,21 +29,17 @@ public class PlayerController : MonoBehaviour
     private void Awake(){
         playerRigidbody = GetComponent<Rigidbody2D>();
         playerInput = GetComponent<PlayerInput>();
-        //pressAction = playerInput.actions["press"];
+
         doubleTapAction = playerInput.actions["doubleTap"];
         tapAction = playerInput.actions["tap"];
         tapPositionAction = playerInput.actions["tapPosition"];
     }
     private void OnEnable(){
-        //pressAction.performed += Move;
-
         doubleTapAction.performed += Attack;
         tapAction.started += StartMove;
         tapAction.canceled += EndMove;
     }
     private void OnDisable(){
-        //pressAction.performed -= Move;
-
         doubleTapAction.performed -= Attack;
         tapAction.started -= StartMove;
         tapAction.canceled -= EndMove;
@@ -54,13 +49,13 @@ public class PlayerController : MonoBehaviour
     {
         //Debug.Log("tap");
         moveRoutine = StartCoroutine("Move");
-        //MoveEvent(_getForce(_getTrackedPosition()).normalized);
     }
     IEnumerator Move()
     {
         //Debug.Log("Start Move");
         while (tapAction.IsInProgress())
         {
+            MoveEvent?.Invoke(_getForce(_getTrackedPosition()).normalized);
             playerRigidbody.AddForce(_getForce(_getTrackedPosition()));
             yield return new WaitForFixedUpdate();
         }
@@ -71,16 +66,16 @@ public class PlayerController : MonoBehaviour
     {
         StopCoroutine(moveRoutine);
         //Debug.Log("canceled Move");
-        //MoveEvent(Vector2.zero);
+        MoveEvent?.Invoke(Vector2.zero);
     }
     
     void Attack(InputAction.CallbackContext context)
     {  
-        //AttackEvent();
+        AttackEvent?.Invoke();
         Debug.Log("Attack");
         playerRigidbody.AddForce(ImpulseMultiplier*_getForce(_getTrackedPosition()), ForceMode2D.Impulse);
     }
-    
+
     Vector2 _getTrackedPosition()
     {
         Vector2 screenPosition = tapPositionAction.ReadValue<Vector2>();
