@@ -303,6 +303,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97581418b1617b541b4befe465ca9679, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlowyMove
-  speed: 2
-  waveSpeed: 3
+  speed: 1.7
+  waveSpeed: 7
   waveAmount: 0.5

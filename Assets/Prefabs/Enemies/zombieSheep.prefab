@@ -192,6 +192,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21aaff7afc862be419e2eecd4b0cda46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ZigZagMovement
-  speed: 2
+  speed: 1
   zigzagSpeed: 7
   zigzagAmount: 0.6
