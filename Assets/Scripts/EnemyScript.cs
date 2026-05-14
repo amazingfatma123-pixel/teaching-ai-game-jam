@@ -40,15 +40,6 @@ public class EnemySpawner : MonoBehaviour
 
         switch (side)
         {
-            /*case 0: // Left
-                x = 0f - offset;
-                y = Random.Range(0f, 1f);
-                break;
-
-            case 1: // Right
-                x = 1f+ offset;
-                y = Random.Range(0f, 1f);
-                break;*/
 
             case 0: // Top
                 x = Random.Range(0f, 1f);
