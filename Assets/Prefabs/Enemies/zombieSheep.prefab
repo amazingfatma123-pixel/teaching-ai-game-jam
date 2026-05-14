@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4898530708856522859}
   - component: {fileID: 8174603056139172411}
   - component: {fileID: 3873630289664392219}
-  - component: {fileID: 3415349879046446681}
+  - component: {fileID: 4495139697330984382}
   m_Layer: 0
   m_Name: zombieSheep
   m_TagString: Enemy
@@ -180,7 +180,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &3415349879046446681
+--- !u!114 &4495139697330984382
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -189,7 +189,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 3684688744739899673}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b63e0f7c8ced69a4d8e10c31307cb3f6, type: 3}
+  m_Script: {fileID: 11500000, guid: 21aaff7afc862be419e2eecd4b0cda46, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMoveToAI
-  speed: 1.5
+  m_EditorClassIdentifier: Assembly-CSharp::ZigZagMovement
+  speed: 2
+  zigzagSpeed: 7
+  zigzagAmount: 0.6

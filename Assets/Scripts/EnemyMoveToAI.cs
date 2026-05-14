@@ -27,8 +27,8 @@ public class EnemyMoveToAI : MonoBehaviour
     private void Start()
     {
         //Pick a random movement type when the enemy spawnes in.
-        //Random.Range(0, 4) gives 0, 1, 2, or 3.
-        movementType = Random.Range(0, 4);
+        //Random.Range(0, 2) gives 0 or 1.
+        movementType = Random.Range(0, 2);
 
         //Makes the wobble happen at different times for each enemy.
         randomOffset = Random.Range(0f, 100f);
@@ -62,22 +62,22 @@ public class EnemyMoveToAI : MonoBehaviour
         //MovementType 1 = normal wobble toward the AI.
         else if (movementType == 1)
         {
-            float wobble = Mathf.Sin(Time.time * 3f + randomOffset) * 0.5f;
+            float wobble = Mathf.Sin(Time.time * 2f + randomOffset) * 0.25f;
             finalDirection = direction + sideDirection * wobble;
         }
 
         //MovementType 2 = slower, wider wobble toward the AI.
-        else if (movementType == 2)
+      //  else if (movementType == 2)
         {
-            float wobble = Mathf.Sin(Time.time * 1.5f + randomOffset) * 0.8f;
-            finalDirection = direction + sideDirection * wobble;
+       //     float wobble = Mathf.Sin(Time.time * 1.5f + randomOffset) * 0.8f;
+       //     finalDirection = direction + sideDirection * wobble;
         }
 
         //MovementType 3 = faster zigzag toward the AI.
-        else if (movementType == 3)
+    //    else if (movementType == 3)
         {
-            float wobble = Mathf.Sin(Time.time * 7f + randomOffset) * 0.6f;
-            finalDirection = direction + sideDirection * wobble;
+     //       float wobble = Mathf.Sin(Time.time * 7f + randomOffset) * 0.6f;
+    //        finalDirection = direction + sideDirection * wobble;
         }
 
         //Move the enemy in the chosen direction.
